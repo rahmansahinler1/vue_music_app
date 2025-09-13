@@ -70,6 +70,21 @@
       </vee-field>
       <ErrorMessage class="text-red-600" name="country" />
     </div>
+    <!-- Music Type -->
+    <div class="mb-3">
+      <label class="inline-block mb-2">Music Type</label>
+      <vee-field
+        as="select"
+        name="music_type"
+        class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
+      >
+        <option value="Pop">Pop</option>
+        <option value="Rock">Rock</option>
+        <option value="Techno">Techno</option>
+        <option value="Metal">Metal</option>
+      </vee-field>
+      <ErrorMessage class="text-red-600" name="music_type" />
+    </div>
     <!-- TOS -->
     <div class="mb-3 pl-6">
       <vee-field
@@ -91,6 +106,9 @@
 </template>
 
 <script>
+import { mapActions } from 'pinia'
+import useUserStore from '@/stores/user'
+
 export default {
   name: 'RegisterForm',
   data() {
@@ -102,16 +120,22 @@ export default {
         password: 'required|min:6|max:12',
         confirm_password: 'confirmed:@password',
         country: 'required|not_one_of:Antartica',
+        music_type: 'required',
         tos: 'required',
       },
     }
   },
   methods: {
-    register(values) {
-      console.log(values)
+    ...mapActions(useUserStore, { createUser: 'register' }),
+    async register(values) {
+      try {
+        await this.createUser(values)
+        window.location.reload()
+      } catch (error) {
+        console.log(error)
+      }
     },
   },
 }
 </script>
-
 <style lang="scss" scoped></style>

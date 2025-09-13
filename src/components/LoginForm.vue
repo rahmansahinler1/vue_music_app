@@ -33,6 +33,9 @@
 </template>
 
 <script>
+import { mapActions } from 'pinia'
+import useUserStore from '@/stores/user'
+
 export default {
   name: 'LoginForm',
   data() {
@@ -44,8 +47,17 @@ export default {
     }
   },
   methods: {
-    login(values) {
+    ...mapActions(useUserStore, ['authenticateUser']),
+    async login(values) {
       console.log(values)
+
+      try {
+        await this.authenticateUser(values)
+        window.location.reload()
+      } catch (error) {
+        console.log(error)
+        return
+      }
     },
   },
 }
